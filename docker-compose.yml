@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # 1. Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: portfolio-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGO_URI=mongodb+srv://sandhyaea23_db_user:oHls3nMsedqx8flZ@cluster0.o8vejtc.mongodb.net/portfolio?retryWrites=true&w=majority
+    networks:
+      - portfolio-network
+
+  # 2. Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: portfolio-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend    # Backend pehle start hoga, fir frontend
+    networks:
+      - portfolio-network
+
+# Dono containers ke aapas mein baat karne ke liye common network
+networks:
+  portfolio-network:
+    driver: bridge

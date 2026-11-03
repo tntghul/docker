@@ -1,0 +1,13 @@
+{
+  "name": "portfolio-root",
+  "version": "1.0.0",
+  "description": "Fullstack Portfolio Application with Node/Express Backend and React Vite Frontend",
+  "scripts": {
+    "start:backend": "cd backend && npm run dev",
+    "start:frontend": "cd frontend && npm run dev",
+    "build:frontend": "cd frontend && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
