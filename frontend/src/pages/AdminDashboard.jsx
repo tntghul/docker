@@ -205,6 +205,32 @@ const AdminDashboard = () => {
     }
   };
 
+  // Add newly discovered JD skills directly to permanent portfolio skills
+  const handleAddJdSkillsToPortfolio = () => {
+    if (!tailoredResume?.addedFromJdSkills || tailoredResume.addedFromJdSkills.length === 0) return;
+
+    const currentSkills = [...(portfolio?.skills || [])];
+    let targetCat = currentSkills.find(
+      (c) => c.category === "Targeted Technologies" || c.category === "Core Competencies" || c.category === "Frontend"
+    );
+
+    if (!targetCat) {
+      targetCat = { category: "Targeted Technologies", items: [] };
+      currentSkills.push(targetCat);
+    }
+
+    tailoredResume.addedFromJdSkills.forEach((skill) => {
+      if (!targetCat.items.includes(skill)) {
+        targetCat.items.push(skill);
+      }
+    });
+
+    const updated = { ...portfolio, skills: currentSkills };
+    setPortfolio(updated);
+    savePortfolioChanges(updated);
+    showToast("Added JD skills to your permanent portfolio!");
+  };
+
   // Handlers for Project CRUD
   const [editingProjectIndex, setEditingProjectIndex] = useState(null);
   const [newProject, setNewProject] = useState({
@@ -1815,19 +1841,31 @@ const AdminDashboard = () => {
                         </div>
 
                         <div className="col-md-6">
-                          <div className="p-3 rounded-4" style={{ background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.25)" }}>
-                            <h6 className="text-danger fw-bold mb-2">
-                              <i className="bi bi-exclamation-octagon-fill me-1"></i>Missing Job Requirements ({tailoredResume.missingSkills?.length || 0})
-                            </h6>
+                          <div className="p-3 rounded-4" style={{ background: "rgba(14, 165, 233, 0.12)", border: "1px solid rgba(14, 165, 233, 0.3)" }}>
+                            <div className="d-flex justify-content-between align-items-center mb-2">
+                              <h6 className="text-info fw-bold mb-0">
+                                <i className="bi bi-stars text-warning me-1"></i>Auto-Added From JD To CV ({tailoredResume.addedFromJdSkills?.length || 0})
+                              </h6>
+                              {tailoredResume.addedFromJdSkills?.length > 0 && (
+                                <button
+                                  type="button"
+                                  className="btn btn-sm btn-outline-info rounded-pill py-0 px-2"
+                                  style={{ fontSize: "11px" }}
+                                  onClick={handleAddJdSkillsToPortfolio}
+                                >
+                                  <i className="bi bi-plus-circle me-1"></i>Save to Portfolio
+                                </button>
+                              )}
+                            </div>
                             <div className="d-flex flex-wrap gap-1">
-                              {tailoredResume.missingSkills?.length > 0 ? (
-                                tailoredResume.missingSkills.map((s, idx) => (
-                                  <span key={idx} className="badge bg-danger-subtle text-danger border border-danger px-2 py-1">
-                                    {s}
+                              {tailoredResume.addedFromJdSkills && tailoredResume.addedFromJdSkills.length > 0 ? (
+                                tailoredResume.addedFromJdSkills.map((s, idx) => (
+                                  <span key={idx} className="badge bg-info-subtle text-info border border-info px-2 py-1">
+                                    + {s}
                                   </span>
                                 ))
                               ) : (
-                                <small className="text-white-50">All primary requirements covered by your profile!</small>
+                                <small className="text-white-50">All required skills were already in your profile!</small>
                               )}
                             </div>
                           </div>
@@ -1896,7 +1934,7 @@ const AdminDashboard = () => {
                         <div className="resume-item">
                           <div className="resume-section-title">Core Competencies & Technical Skills</div>
                           <div className="d-flex flex-wrap gap-1">
-                            {tailoredResume.matchedSkills?.map((s, idx) => (
+                            {(tailoredResume.tailoredSkills || tailoredResume.matchedSkills || []).map((s, idx) => (
                               <span key={idx} className="resume-skill-badge">{s}</span>
                             ))}
                           </div>

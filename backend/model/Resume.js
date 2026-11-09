@@ -8,6 +8,8 @@ const resumeSchema = new mongoose.Schema(
     jobDescriptionRaw: { type: String, required: true },
     matchScore: { type: Number, default: 0 },
     matchedSkills: [{ type: String }],
+    addedFromJdSkills: [{ type: String }],
+    tailoredSkills: [{ type: String }],
     missingSkills: [{ type: String }],
     tailoredSummary: { type: String, required: true },
     selectedProjects: [
