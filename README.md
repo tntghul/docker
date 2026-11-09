@@ -1,52 +1,119 @@
-# Portfolio Fullstack Integration (Backend + Frontend)
+# ⚡ SMART PORTFOLIO CMS + AI RESUME BUILDER
 
-Yeh project **Express + MongoDB (Backend)** aur **React + Vite (Frontend)** ko aapas mein integrate karta hai.
+An intelligent, full-stack personal branding platform featuring an **Admin Content Management System (CMS)** and a **Gemini AI-Powered ATS Resume Generator** tailored to job descriptions.
 
 ---
 
-## 🚀 Kaise Run Karein (How to Run)
+## 🌟 Key Features Implemented
 
-### 1. Backend Start Karein:
-Terminal 1 open karein:
+### 1. 🛡️ Module 1: Admin Dashboard CMS
+* **JWT Protected Authentication**: Secure login and admin account registration.
+* **Unified Profile Manager**: Update bio, headlines, avatar URL, location, and social handles without code changes.
+* **Categorized Skills Manager**: Add, edit, and organize skills into Frontend, Backend, Databases, and Tools.
+* **Projects CMS**: Add, edit, or remove featured projects with live URLs, GitHub links, and tech stack tags.
+* **Work Experience & Timeline**: Manage past roles, duration, location, and achievement bullet points.
+* **Education & Certifications**: Manage academic degrees and verifiable certificate credentials.
+* **Real-Time Dynamic Theming**: Toggle between *Modern Dark*, *Minimalist Light*, *Emerald Glow*, and *Cyber Indigo*.
+
+### 2. 🌐 Module 2: Dynamic Public Portfolio
+* Single Page Portfolio dynamically populated via `GET /api/portfolio/public`.
+* Changes made in the Admin CMS reflect immediately on the public website upon save.
+* Fully responsive navigation, hero banner, interactive category project filters, career timeline, and contact form.
+
+### 3. 🤖 Module 3: Gemini AI Resume Builder
+* **Job Description (JD) Analysis**: Paste any company's job posting to extract requirements.
+* **Skills Gap Analysis**: Immediate visual breakdown showing **Matched Skills** (green badges) vs **Missing Requirements** (red badges) with an alignment score percentage.
+* **Zero-Hallucination Guardrail**: The system prompt strictly grounds Gemini 2.5 Flash in your verified portfolio data. It never fabricates companies, degrees, or unverified skills.
+* **Live A4 Preview & Editor**: Review and adjust tailored summaries and project rankings in real time.
+* **Instant ATS PDF Export**: One-click download of vector-clean, print-ready A4 resumes via `html2pdf.js`.
+
+### 4. 📜 Module 4: Resume Management & History
+* Save customized resumes for distinct companies and roles (e.g. Full Stack vs Backend vs Frontend).
+* View previous resumes, load them back into the live canvas, or delete past versions.
+
+---
+
+## 🚀 How to Run the Project
+
+### 1. Start Backend API
+Open **Terminal 1**:
 ```bash
 cd backend
 npm run dev
 ```
-Backend chalega: `http://localhost:3000`
+* Backend runs on: `http://localhost:5000`
+* Connected to: **MongoDB Atlas**
+* Health probe: `http://localhost:5000/`
 
-### 2. Frontend Start Karein:
-Terminal 2 open karein:
+> **Note**: To enable Gemini API, add your key in `backend/.env`:
+> ```env
+> GEMINI_API_KEY=your_actual_key_here
+> ```
+> *(A deterministic keyword tailoring engine automatically runs as a seamless fallback if no key is provided).*
+
+---
+
+### 2. Start Frontend Client
+Open **Terminal 2**:
 ```bash
 cd frontend
 npm run dev
 ```
-Frontend chalega: `http://localhost:5173`
+* Frontend runs on: `http://localhost:5173`
+* Vite automatically proxies `/api` calls to `http://localhost:5000`.
 
 ---
 
-## 🛠️ Integration Details (Kya-kya add aur fix kiya gaya):
+## 🗺️ Application Routing
 
-1. **Backend Improvements:**
-   - **Body Parser Middleware (`express.json()`)**: Added in `backend/server.js` taki POST request se aane wala `req.body` backend read kar sake.
-   - **CORS Middleware**: Enable kiya gaya taki browser cross-origin requests (`localhost:5173` se `localhost:3000`) ko block na kare.
-   - **Robust Routes**:
-     - `POST /api/users/addUser`: New user signup / registration ke liye.
-     - `POST /api/users/login`: Existing user login ke liye.
-     - `GET /api/users/allUser`: Registered users fetch karne ke liye.
-   - **Reliable `.env` loading**: `backend/config/db.js` mein path resolve kiya gaya taki kahin se bhi backend run karne par MongoDB URI detect ho sake.
+| Route | View | Description |
+| :--- | :--- | :--- |
+| `/` | **Public Portfolio** | Live, dynamic developer portfolio viewable by recruiters. |
+| `/login` | **Admin Login** | Secure sign-in / registration for portfolio owner. |
+| `/admin` | **Admin CMS & AI Builder** | Master dashboard with tabbed CMS, AI Resume Builder, and Resume History. |
 
-2. **Frontend Improvements:**
-   - **API Service (`frontend/src/api/userApi.js`)**: Dedicated API layer banayi gayi jo `addUser`, `login`, aur `allUser` endpoints ko call karti hai.
-   - **Vite Proxy Config (`frontend/vite.config.js`)**: Vite dev server mein `/api` proxy set ki gayi jo automatically `http://localhost:3000` par forward karti hai.
-   - **React Router Navigation (`frontend/src/App.jsx`)**:
-     - `/` aur `/signup` -> Signup / Login page
-     - `/dashboard` -> Dashboard page
-   - **Interactive Signup Page (`frontend/src/components/Signup.jsx`)**:
-     - Real-time form state (`email`, `password`)
-     - Sign Up aur Log In toggle
-     - Loading spinner aur error/success alerts
-     - Successful submission par user data save karke dashboard par auto-redirect
-   - **Connected Dashboard Page (`frontend/src/components/Dashboard.jsx`)**:
-     - Logged-in user information display
-     - Live users list fetch from MongoDB (`GET /api/users/allUser`)
-     - Refresh Data button aur Logout functionality
+---
+
+## 📂 Project Architecture
+
+```
+portfolio/
+├── backend/
+│   ├── config/
+│   │   └── db.js                  # MongoDB Atlas connection
+│   ├── controller/
+│   │   ├── authController.js       # Admin authentication & JWT issuing
+│   │   ├── portfolioController.js  # CRUD portfolio engine with auto-seeding
+│   │   └── resumeController.js     # AI resume generation & history
+│   ├── middleware/
+│   │   └── authMiddleware.js       # JWT route guard
+│   ├── model/
+│   │   ├── user.js                 # Admin user model
+│   │   ├── Portfolio.js            # Unified portfolio master schema
+│   │   └── Resume.js               # Saved tailored resumes schema
+│   ├── routes/
+│   │   ├── authRoutes.js           # /api/auth
+│   │   ├── portfolioRoutes.js      # /api/portfolio
+│   │   └── resumeRoutes.js         # /api/resume
+│   ├── services/
+│   │   └── geminiService.js        # Gemini 2.5 Flash SDK + Zero-hallucination engine
+│   ├── .env                        # Environment configuration
+│   └── server.js                   # Express application entry point
+│
+└── frontend/
+    ├── src/
+    │   ├── api/
+    │   │   └── client.js           # Axios instance with JWT interceptors
+    │   ├── components/
+    │   │   └── public/             # Navbar, Hero, About, Skills, Projects, Experience, Contact
+    │   ├── pages/
+    │   │   ├── HomePage.jsx        # Public live dynamic portfolio
+    │   │   ├── LoginPage.jsx       # Admin login screen
+    │   │   └── AdminDashboard.jsx  # Complete tabbed CMS & AI Resume Builder
+    │   ├── utils/
+    │   │   └── pdfExport.js        # html2pdf.js A4 vector export handler
+    │   ├── App.jsx                 # Client router
+    │   ├── index.css               # Dynamic theme engine & ATS resume canvas
+    │   └── main.jsx                # Bootstrap & app bootstrap
+    └── vite.config.js              # Proxy configuration for port 5000
+```

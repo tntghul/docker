@@ -2,7 +2,11 @@ import express from "express";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import cors from "cors";
 import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
+import portfolioRoutes from "./routes/portfolioRoutes.js";
+import resumeRoutes from "./routes/resumeRoutes.js";
 import userRoutes from "./routes/userRoute.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -15,40 +19,49 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware for CORS
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
-});
+// Enable CORS
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
+}));
 
 // Body parser middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// Root route
+// Root health route
 app.get("/", (req, res) => {
-  res.json({ message: "Portfolio Backend API is running successfully!" });
+  res.json({
+    status: "online",
+    message: "Smart Portfolio CMS & AI Resume Builder API is running smoothly!",
+    endpoints: {
+      auth: "/api/auth",
+      portfolio: "/api/portfolio",
+      resume: "/api/resume"
+    }
+  });
 });
 
 // API Routes
-app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/portfolio", portfolioRoutes);
+app.use("/api/resume", resumeRoutes);
+app.use("/api/users", userRoutes); // Legacy support
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({ message: "Route not found" });
+  res.status(404).json({ message: "API Route not found" });
 });
 
 // Global error handler
 app.use((err, req, res, next) => {
-  console.error("Server error:", err);
+  console.error("Internal Server Error:", err);
   res.status(500).json({ message: "Internal server error", error: err.message });
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
+
+export default app;
