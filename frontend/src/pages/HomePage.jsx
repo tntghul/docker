@@ -18,6 +18,7 @@ const HomePage = () => {
   const fetchPortfolio = async () => {
     try {
       setLoading(true);
+      setError(null);
       const res = await portfolioApi.getPublicPortfolio();
       setPortfolio(res.data);
       if (res.data?.theme) {

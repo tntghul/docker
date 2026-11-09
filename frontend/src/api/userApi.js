@@ -1,6 +1,15 @@
 // Backend API endpoint base
-// If VITE_API_URL is defined, use it; otherwise use the Vite proxy path '/api/users'
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/users';
+const LIVE_USERS_API = "https://portfolio-backend-lv8o.onrender.com/api/users";
+
+const getApiBaseUrl = () => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+    return "/api/users";
+  }
+  return LIVE_USERS_API;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const registerUser = async (userData) => {
   const response = await fetch(`${API_BASE_URL}/addUser`, {

@@ -1,9 +1,20 @@
 import axios from "axios";
 
+// Default directly to the live Render backend in production so requests bypass any Vercel proxy/SSO blocks
+const LIVE_RENDER_API = "https://portfolio-backend-lv8o.onrender.com";
+
+const getBaseUrl = () => {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return `${import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "")}/api`;
+  }
+  if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+    return "/api";
+  }
+  return `${LIVE_RENDER_API}/api`;
+};
+
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL
-    ? `${import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "")}/api`
-    : "/api"
+  baseURL: getBaseUrl()
 });
 
 // Automatically inject JWT token from localStorage into Authorization header
