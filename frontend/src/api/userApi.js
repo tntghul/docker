@@ -2,7 +2,10 @@
 const LIVE_USERS_API = "https://portfolio-backend-lv8o.onrender.com/api/users";
 
 const getApiBaseUrl = () => {
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl && !envUrl.includes("portfolio.com") && !envUrl.includes("docs/services") && (envUrl.includes("render.com") || envUrl.includes("localhost"))) {
+    return envUrl;
+  }
   if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
     return "/api/users";
   }

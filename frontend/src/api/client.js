@@ -4,8 +4,10 @@ import axios from "axios";
 const LIVE_RENDER_API = "https://portfolio-backend-lv8o.onrender.com";
 
 const getBaseUrl = () => {
-  if (import.meta.env.VITE_API_BASE_URL) {
-    return `${import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "")}/api`;
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  // If envUrl is set and is a valid URL not pointing to sample docs or portfolio.com
+  if (envUrl && !envUrl.includes("portfolio.com") && !envUrl.includes("docs/services") && (envUrl.includes("render.com") || envUrl.includes("localhost"))) {
+    return `${envUrl.replace(/\/$/, "")}/api`;
   }
   if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
     return "/api";
