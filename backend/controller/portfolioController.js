@@ -1,7 +1,9 @@
 import Portfolio from "../model/Portfolio.js";
+import { ensureConnected } from "../config/db.js";
 
 // Helper: Seed initial default portfolio if database is completely empty
 const getOrCreateDefaultPortfolio = async (userId) => {
+  await ensureConnected();
   let portfolio = await Portfolio.findOne();
   if (!portfolio) {
     portfolio = await Portfolio.create({
@@ -134,6 +136,7 @@ export const getPublicPortfolio = async (req, res) => {
 // Admin: Get portfolio for editing
 export const getAdminPortfolio = async (req, res) => {
   try {
+    await ensureConnected();
     let portfolio = await Portfolio.findOne({ userId: req.user.userId });
     if (!portfolio) {
       portfolio = await Portfolio.findOne();
@@ -154,6 +157,7 @@ export const getAdminPortfolio = async (req, res) => {
 // Admin: Update portfolio sections
 export const updatePortfolio = async (req, res) => {
   try {
+    await ensureConnected();
     let portfolio = await Portfolio.findOne({ userId: req.user.userId });
     if (!portfolio) {
       portfolio = await Portfolio.findOne();
