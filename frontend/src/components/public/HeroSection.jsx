@@ -38,11 +38,11 @@ const HeroSection = ({ personalInfo, socialLinks }) => {
               {title}
             </h3>
 
-            <p className="lead text-white-50 mb-4" style={{ maxWidth: "620px", fontSize: "16.5px", lineHeight: "1.7" }}>
+            <p className="lead text-white-50 mb-4 mx-auto mx-lg-0" style={{ maxWidth: "620px", fontSize: "16.5px", lineHeight: "1.7" }}>
               {bio}
             </p>
 
-            <div className="d-flex flex-wrap align-items-center gap-3 mb-4">
+            <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start gap-3 mb-4">
               <a href="#projects" className="btn btn-primary px-4 py-2 rounded-pill fw-bold" style={{
                 background: "var(--primary-gradient)",
                 border: "none",
