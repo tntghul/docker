@@ -415,7 +415,7 @@ body {
 [data-theme="minimal-light"] {
   --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
-  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-bg: #ffffff;
   --card-border: rgba(0, 0, 0, 0.08);
   --primary-gradient: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
   --primary-glow: rgba(37, 99, 235, 0.25);
@@ -424,7 +424,146 @@ body {
   --input-bg: #ffffff;
   --input-border: #cbd5e1;
   --input-focus-border: #2563eb;
+  --nav-bg: rgba(255, 255, 255, 0.95);
+  --nav-border: rgba(0, 0, 0, 0.08);
+  --nav-text: #0f172a;
+  color-scheme: light;
 }
+
+/* Light Mode Global Text & Contrast Overrides */
+[data-theme="minimal-light"] body {
+  color: #0f172a !important;
+  background-color: #f8fafc !important;
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(37, 99, 235, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(59, 130, 246, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(14, 165, 233, 0.06) 0%, transparent 45%);
+}
+
+/* Text visibility in light mode */
+[data-theme="minimal-light"] .text-white:not(.badge-primary):not(.badge.bg-primary):not(.btn-primary):not(.btn-gradient-primary):not(.brand-icon-badge) {
+  color: #0f172a !important;
+}
+
+[data-theme="minimal-light"] .text-white-50 {
+  color: #475569 !important;
+}
+
+[data-theme="minimal-light"] .text-muted {
+  color: #64748b !important;
+}
+
+[data-theme="minimal-light"] .card {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="minimal-light"] .card h1,
+[data-theme="minimal-light"] .card h2,
+[data-theme="minimal-light"] .card h3,
+[data-theme="minimal-light"] .card h4,
+[data-theme="minimal-light"] .card h5,
+[data-theme="minimal-light"] .card h6 {
+  color: #0f172a !important;
+}
+
+[data-theme="minimal-light"] .btn-outline-light {
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+  background-color: rgba(0, 0, 0, 0.02) !important;
+}
+
+[data-theme="minimal-light"] .btn-outline-light:hover {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+[data-theme="minimal-light"] .btn-outline-secondary {
+  color: #475569 !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="minimal-light"] .btn-outline-secondary:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+[data-theme="minimal-light"] .badge.bg-dark {
+  background-color: #e2e8f0 !important;
+  color: #1e293b !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="minimal-light"] input.form-control,
+[data-theme="minimal-light"] textarea.form-control,
+[data-theme="minimal-light"] select.form-select {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="minimal-light"] input.form-control::placeholder,
+[data-theme="minimal-light"] textarea.form-control::placeholder {
+  color: #94a3b8 !important;
+}
+
+[data-theme="minimal-light"] footer {
+  background: #f1f5f9 !important;
+  border-top-color: #e2e8f0 !important;
+}
+
+[data-theme="minimal-light"] footer .text-white-50 {
+  color: #64748b !important;
+}
+
+[data-theme="minimal-light"] footer .text-white {
+  color: #0f172a !important;
+}
+
+/* Skills pill component */
+.skill-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+[data-theme="minimal-light"] .skill-pill {
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+/* Mobile Navbar Styles */
+@media (max-width: 991.98px) {
+  .portfolio-navbar .navbar-collapse.show {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 16px;
+    margin-top: 12px;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  .portfolio-navbar .navbar-collapse.show .nav-link {
+    padding: 10px 14px !important;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .portfolio-navbar .navbar-collapse.show .nav-link:hover {
+    background: rgba(99, 102, 241, 0.12);
+  }
+}
+
 
 [data-theme="emerald-glow"] {
   --bg-primary: #041710;

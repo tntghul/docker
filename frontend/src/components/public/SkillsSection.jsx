@@ -38,14 +38,7 @@ const SkillsSection = ({ skills = [] }) => {
                     {catGroup.items && catGroup.items.map((skill, sIdx) => (
                       <span
                         key={sIdx}
-                        className="badge px-3 py-2 rounded-pill"
-                        style={{
-                          background: "rgba(255, 255, 255, 0.06)",
-                          border: "1px solid rgba(255, 255, 255, 0.12)",
-                          color: "#f8fafc",
-                          fontSize: "13px",
-                          fontWeight: 500
-                        }}
+                        className="badge skill-pill px-3 py-2 rounded-pill"
                       >
                         {skill}
                       </span>

@@ -111,7 +111,7 @@ const ContactSection = ({ personalInfo, socialLinks }) => {
                     <input
                       type="text"
                       className="form-control"
-                      style={{ background: "rgba(255, 255, 255, 0.05)", borderColor: "rgba(255, 255, 255, 0.15)", color: "#fff" }}
+                      style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-main)" }}
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -122,7 +122,7 @@ const ContactSection = ({ personalInfo, socialLinks }) => {
                     <input
                       type="email"
                       className="form-control"
-                      style={{ background: "rgba(255, 255, 255, 0.05)", borderColor: "rgba(255, 255, 255, 0.15)", color: "#fff" }}
+                      style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-main)" }}
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -133,7 +133,7 @@ const ContactSection = ({ personalInfo, socialLinks }) => {
                     <input
                       type="text"
                       className="form-control"
-                      style={{ background: "rgba(255, 255, 255, 0.05)", borderColor: "rgba(255, 255, 255, 0.15)", color: "#fff" }}
+                      style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-main)" }}
                       required
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
@@ -144,7 +144,7 @@ const ContactSection = ({ personalInfo, socialLinks }) => {
                     <textarea
                       rows="4"
                       className="form-control"
-                      style={{ background: "rgba(255, 255, 255, 0.05)", borderColor: "rgba(255, 255, 255, 0.15)", color: "#fff" }}
+                      style={{ background: "var(--input-bg)", borderColor: "var(--input-border)", color: "var(--text-main)" }}
                       required
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
