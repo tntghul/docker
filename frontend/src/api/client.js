@@ -54,7 +54,7 @@ export const authApi = {
 
 // Portfolio CMS Endpoints
 export const portfolioApi = {
-  getPublicPortfolio: () => API.get("/portfolio/public"),
+  getPublicPortfolio: (userId) => API.get(userId ? `/portfolio/public?userId=${userId}` : "/portfolio/public"),
   getAdminPortfolio: () => API.get("/portfolio/admin"),
   updatePortfolio: (data) => API.put("/portfolio/update", data)
 };

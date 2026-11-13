@@ -10,6 +10,8 @@ function App() {
       <Routes>
         {/* Public Dynamic Portfolio */}
         <Route path="/" element={<HomePage />} />
+        <Route path="/p/:userId" element={<HomePage />} />
+        <Route path="/portfolio/:userId" element={<HomePage />} />
 
         {/* Admin Authentication */}
         <Route path="/login" element={<LoginPage />} />

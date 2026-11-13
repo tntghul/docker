@@ -30,6 +30,10 @@ const AdminDashboard = () => {
     setTimeout(() => setToast({ show: false, message: "", type: "success" }), 4000);
   };
 
+  const livePortfolioUrl = portfolio?.isPrimary
+    ? "/"
+    : (portfolio?.userId ? `/p/${portfolio.userId}` : "/");
+
   // Check auth and fetch admin portfolio
   const fetchPortfolioData = async () => {
     const token = localStorage.getItem("token");
@@ -565,7 +569,7 @@ const AdminDashboard = () => {
           </div>
 
           <div className="d-flex align-items-center gap-2">
-            <Link to="/" target="_blank" className="btn btn-sm btn-outline-info rounded-pill px-3">
+            <Link to={livePortfolioUrl} target="_blank" className="btn btn-sm btn-outline-info rounded-pill px-3">
               <i className="bi bi-box-arrow-up-right me-1"></i>View Live Site
             </Link>
 
@@ -612,7 +616,9 @@ const AdminDashboard = () => {
                 )}
                 <div className="overflow-hidden">
                   <h6 className="mb-0 text-white fw-bold text-truncate">{portfolio?.personalInfo?.fullName || "Admin"}</h6>
-                  <small className="text-info" style={{ fontSize: "11px" }}>Portfolio Owner</small>
+                  <small className="text-info" style={{ fontSize: "11px" }}>
+                    {portfolio?.isPrimary ? "Primary Owner" : "Admin (Personal CMS)"}
+                  </small>
                 </div>
               </div>
 
@@ -701,6 +707,34 @@ const AdminDashboard = () => {
                   <p className="text-white-50">
                     Welcome to your central administration hub. Updates made in any section below are saved directly into MongoDB and immediately reflect on the public website with zero redeployments.
                   </p>
+
+                  <div className="p-3 rounded-4 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2" style={{
+                    background: "rgba(99, 102, 241, 0.08)",
+                    border: "1px solid rgba(99, 102, 241, 0.25)"
+                  }}>
+                    <div>
+                      <span className={`badge ${portfolio?.isPrimary ? "bg-primary" : "bg-info text-dark"} me-2 px-3 py-1 rounded-pill fw-bold`}>
+                        {portfolio?.isPrimary ? "Primary Live Site" : "Personal Admin Site"}
+                      </span>
+                      <span className="text-white small">
+                        Public URL: <code className="text-info">{window.location.origin + livePortfolioUrl}</code>
+                      </span>
+                    </div>
+                    <div className="d-flex gap-2">
+                      <button
+                        className="btn btn-sm btn-outline-light rounded-pill px-3"
+                        onClick={() => {
+                          navigator.clipboard.writeText(window.location.origin + livePortfolioUrl);
+                          showToast("Live portfolio link copied to clipboard!");
+                        }}
+                      >
+                        <i className="bi bi-clipboard me-1"></i>Copy Live Link
+                      </button>
+                      <Link to={livePortfolioUrl} target="_blank" className="btn btn-sm btn-info rounded-pill px-3 fw-bold">
+                        <i className="bi bi-box-arrow-up-right me-1"></i>Open
+                      </Link>
+                    </div>
+                  </div>
 
                   <div className="row g-3 mt-2">
                     <div className="col-md-3">

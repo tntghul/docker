@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import { portfolioApi } from "../api/client";
 import Navbar from "../components/public/Navbar";
 import HeroSection from "../components/public/HeroSection";
@@ -11,6 +12,10 @@ import ContactSection from "../components/public/ContactSection";
 import Footer from "../components/public/Footer";
 
 const HomePage = () => {
+  const { userId } = useParams();
+  const [searchParams] = useSearchParams();
+  const targetUserId = userId || searchParams.get("userId") || searchParams.get("user");
+
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,7 +24,7 @@ const HomePage = () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await portfolioApi.getPublicPortfolio();
+      const res = await portfolioApi.getPublicPortfolio(targetUserId);
       setPortfolio(res.data);
       if (res.data?.theme) {
         document.documentElement.setAttribute("data-theme", res.data.theme);
@@ -34,7 +39,7 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchPortfolio();
-  }, []);
+  }, [targetUserId]);
 
   const handleThemeChange = (newTheme) => {
     if (portfolio) {

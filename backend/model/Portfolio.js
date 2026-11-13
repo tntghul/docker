@@ -36,7 +36,8 @@ const certificationSchema = new mongoose.Schema({
 
 const portfolioSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false, index: true },
+    isPrimary: { type: Boolean, default: false },
     personalInfo: {
       fullName: { type: String, default: "Ayansh Developer" },
       title: { type: String, default: "Full Stack Developer & AI Enthusiast" },

@@ -1,4 +1,5 @@
 import User from "../model/user.js";
+import Portfolio from "../model/Portfolio.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -15,13 +16,28 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "User already registered with this email." });
     }
 
+    const userCount = await User.countDocuments();
+    const role = userCount === 0 ? "owner" : "admin";
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
-      name: name || "Portfolio Admin",
+      name: name || (role === "owner" ? "Portfolio Owner" : "Portfolio Admin"),
       email: email.toLowerCase().trim(),
       password: hashedPassword,
-      role: "admin"
+      role
     });
+
+    // If this is the owner, claim any unassigned portfolio or mark the first portfolio as primary
+    if (role === "owner") {
+      const existingPortfolio = await Portfolio.findOne({
+        $or: [{ userId: null }, { userId: { $exists: false } }]
+      });
+      if (existingPortfolio) {
+        existingPortfolio.userId = user._id;
+        existingPortfolio.isPrimary = true;
+        await existingPortfolio.save();
+      }
+    }
 
     const secret = process.env.JWT_SECRET || "portfolio_super_jwt_secret_key_2026_xyz";
     const token = jwt.sign({ userId: user._id, role: user.role, email: user.email }, secret, {
@@ -53,11 +69,22 @@ export const login = async (req, res) => {
       if (count === 0) {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await User.create({
-          name: "Portfolio Admin",
+          name: "Portfolio Owner",
           email: email.toLowerCase().trim(),
           password: hashedPassword,
-          role: "admin"
+          role: "owner"
         });
+
+        // Claim existing unassigned portfolio
+        const existingPortfolio = await Portfolio.findOne({
+          $or: [{ userId: null }, { userId: { $exists: false } }]
+        });
+        if (existingPortfolio) {
+          existingPortfolio.userId = newUser._id;
+          existingPortfolio.isPrimary = true;
+          await existingPortfolio.save();
+        }
+
         const secret = process.env.JWT_SECRET || "portfolio_super_jwt_secret_key_2026_xyz";
         const token = jwt.sign({ userId: newUser._id, role: newUser.role, email: newUser.email }, secret, {
           expiresIn: "7d"
