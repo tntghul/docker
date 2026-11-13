@@ -1,19 +1,71 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = ({ portfolio, onThemeChange }) => {
   const currentTheme = portfolio?.theme || "modern-dark";
   const isLight = currentTheme === "minimal-light";
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const navRef = useRef(null);
+  const location = useLocation();
 
   const toggleNav = () => setIsNavOpen((prev) => !prev);
   const closeNav = () => setIsNavOpen(false);
 
+  // Close mobile menu if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setIsNavOpen(false);
+      }
+    };
+
+    if (isNavOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [isNavOpen]);
+
+  // Smooth scroll handler for nav links
+  const handleNavClick = (e, targetId) => {
+    e.preventDefault();
+    setIsNavOpen(false);
+
+    // If on a different page, navigate to root with target
+    if (location.pathname !== "/" && !location.pathname.startsWith("/p/")) {
+      window.location.href = `/#${targetId}`;
+      return;
+    }
+
+    // Allow time for menu collapse layout shift before calculating target position
+    setTimeout(() => {
+      const element = document.getElementById(targetId);
+      if (element) {
+        const navHeight = navRef.current ? navRef.current.offsetHeight : 70;
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = Math.max(0, elementPosition - navHeight - 14);
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+
+        // Also update URL hash without jump
+        window.history.pushState(null, "", `#${targetId}`);
+      }
+    }, 120);
+  };
+
   return (
     <nav
+      ref={navRef}
       className={`navbar navbar-expand-lg ${isLight ? "navbar-light" : "navbar-dark"} sticky-top portfolio-navbar`}
       style={{
-        background: isLight ? "rgba(255, 255, 255, 0.92)" : "rgba(10, 14, 23, 0.88)",
+        background: isLight ? "rgba(255, 255, 255, 0.94)" : "rgba(10, 14, 23, 0.88)",
         backdropFilter: "blur(14px)",
         WebkitBackdropFilter: "blur(14px)",
         borderBottom: isLight ? "1px solid rgba(0, 0, 0, 0.08)" : "1px solid rgba(255, 255, 255, 0.08)",
@@ -66,7 +118,7 @@ const Navbar = ({ portfolio, onThemeChange }) => {
               <a
                 className={`nav-link ${isLight ? "text-dark" : "text-white-50"}`}
                 href="#about"
-                onClick={closeNav}
+                onClick={(e) => handleNavClick(e, "about")}
               >
                 About
               </a>
@@ -75,7 +127,7 @@ const Navbar = ({ portfolio, onThemeChange }) => {
               <a
                 className={`nav-link ${isLight ? "text-dark" : "text-white-50"}`}
                 href="#skills"
-                onClick={closeNav}
+                onClick={(e) => handleNavClick(e, "skills")}
               >
                 Skills
               </a>
@@ -84,7 +136,7 @@ const Navbar = ({ portfolio, onThemeChange }) => {
               <a
                 className={`nav-link ${isLight ? "text-dark" : "text-white-50"}`}
                 href="#projects"
-                onClick={closeNav}
+                onClick={(e) => handleNavClick(e, "projects")}
               >
                 Projects
               </a>
@@ -93,7 +145,7 @@ const Navbar = ({ portfolio, onThemeChange }) => {
               <a
                 className={`nav-link ${isLight ? "text-dark" : "text-white-50"}`}
                 href="#experience"
-                onClick={closeNav}
+                onClick={(e) => handleNavClick(e, "experience")}
               >
                 Experience
               </a>
@@ -102,7 +154,7 @@ const Navbar = ({ portfolio, onThemeChange }) => {
               <a
                 className={`nav-link ${isLight ? "text-dark" : "text-white-50"}`}
                 href="#education"
-                onClick={closeNav}
+                onClick={(e) => handleNavClick(e, "education")}
               >
                 Education
               </a>
@@ -111,7 +163,7 @@ const Navbar = ({ portfolio, onThemeChange }) => {
               <a
                 className={`nav-link ${isLight ? "text-dark" : "text-white-50"}`}
                 href="#contact"
-                onClick={closeNav}
+                onClick={(e) => handleNavClick(e, "contact")}
               >
                 Contact
               </a>
